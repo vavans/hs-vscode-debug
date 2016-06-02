@@ -19,6 +19,8 @@ library
   ghc-options:         -Wall
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , Debugger
+                     , DebugProtocol
   build-depends:       base >= 4.7 && < 5
 
 executable hs-vscode-debug
@@ -27,6 +29,7 @@ executable hs-vscode-debug
   hs-source-dirs:      app
   main-is:             Main.hs
   build-depends:       base
+                     , network
                      , hs-vscode-debug
 
 test-suite spec

@@ -1,8 +1,29 @@
 module Main where
 
-import Lib (ourAdd)
+import DebugProtocol (parseRequest)
+import Network
+import System.IO
 
-import Text.Printf (printf)
+processHandle :: Handle -> IO ()
+processHandle handle = do
+                line <- hGetChar handle
+                --putStrLn ("response: " ++ line)
+                putChar line
+                --putStr ">"
+                --cmd <- getLine
+                --hPutStr handle cmd
+                processHandle handle
+
+handleSocket :: Socket -> IO ()
+handleSocket sock = do
+                (handle, _, _) <- accept sock
+                hSetBuffering handle NoBuffering
+                hSetBuffering stdout NoBuffering
+                processHandle handle
+                handleSocket sock
 
 main :: IO ()
-main = printf "2 + 3 = %d\n" (ourAdd 2 3)
+main = withSocketsDo $ do
+                sock <- listenOn $ PortNumber 4711
+                putStrLn "Listening on port 4711..."
+                handleSocket sock
